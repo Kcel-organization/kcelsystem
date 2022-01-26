@@ -2,6 +2,13 @@
 session_start();
 include('connection.php');
 
+function random($length){
+    $user_id = '';
+    $size = rand(3,$length);
+    
+    for($i=0; $i < $size; $i++){
+        $user_id .= rand(0,9);
+    }
 
     
     return $user_id;
