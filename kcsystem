@@ -40,6 +40,38 @@
  int current_hour;
  int current_minutes;
  
+  void viewAll(){
+
+         connection = mysql_init(0);
+         MYSQL_ROW record;
+
+         if (!mysql_real_connect(connection, server, user, password, database, 0, NULL, 0)) {
+         fprintf(stderr, "%s\n", mysql_error(connection));
+         exit(1);
+         }
+
+         if(mysql_query(connection, "SELECT Assignment_ID, Assignment_Date FROM assignment")){
+            printf("Unable to connect");
+            mysql_close(connection);
+            return 1;
+         }
+         r = mysql_store_result(connection);
+        if(r==NULL){
+            printf("Unable to compile SQL statement\n");
+            mysql_close(connection);
+            return 1;
+        }
+        puts("Assignment_ID \t\t Date");
+        while (record = mysql_fetch_row(r)){
+            printf("%s\t\t %s\n",record[0], record[1] );
+        }
+        mysql_close(connection);
+
+ }
+
+ 
+ 
+ 
  //this function inserts a request into the database
  void requestActivation(){
      char pupil_id[10];
