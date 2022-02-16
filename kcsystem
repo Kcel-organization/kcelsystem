@@ -69,7 +69,45 @@
 
  }
 
- 
+ //this function is for viewing details of a particular assignment from the database
+ void viewAssignment(){
+     char sqlquery[255];
+
+         connection = mysql_init(0);
+         MYSQL_ROW record1;
+         if (!mysql_real_connect(connection, server, user, password, database, 0, NULL, 0)) {
+         fprintf(stderr, "%s\n", mysql_error(connection));
+         exit(1);
+         }
+
+         //char assignment[2];
+        // printf("Enter assignmentID:\t");
+         scanf("%s", assignmentid);
+         fflush(stdin);
+
+
+         strcpy(myquery, "SELECT * FROM assignment WHERE Assignment_Id = \'");
+         strcat(myquery, assignmentid);
+         strcat(myquery, "\'");
+
+         if(mysql_query(connection, myquery)){
+            printf("Unable to connect");
+            mysql_close(connection);
+            return 1;
+         }
+         r1 = mysql_store_result(connection);
+        if(r1==NULL){
+            printf("Unable to compile SQL statement\n");
+            mysql_close(connection);
+            return 1;
+        }
+        puts("Assignment_ID\t\tAssignment\t\tDate\t\tStartTime\t\tEndTime");
+        record1 = mysql_fetch_row(r1);
+            printf("%s\t\t %d\t\t %s\t\t %s\t\t %s\t\t\n",record1[0], strlen(record1[1]), record1[2], record1[3], record1[4] );
+
+
+        mysql_close(connection);
+ }
  
  
  //this function inserts a request into the database
@@ -169,6 +207,30 @@
         mysql_close(connection);
  }
  
+ //this function grades the assignment
+
+int grade(int A[26][28], int B[], int c){
+    int total=0;
+    for(int index=0; index<28; index++){
+
+        if(A[c][index]==B[index]){
+        total+=1;
+        }
+
+}
+return total;
+}
+int reference(char c){
+
+    char letters[]="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    for(int i=0; i<26; i++){
+        if(c==letters[i])
+            return i;
+
+    }
+}
+
+
  
  
 int attemptassignment(){
@@ -201,6 +263,117 @@ int attemptassignment(){
     {1,0,0,1,1,0,0,1,1,0,0,1,0,1,1,0,1,0,0,1,1,0,0,1,1,0,0,1},
     {1,0,0,1,1,0,0,1,1,0,0,1,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0},
     {1,1,1,1,0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0,1,0,0,0,1,1,1,1}};
+
+
+// this checks whether the assignment is with in time for attempt
+
+
+    time_t t;
+
+    t = time(NULL);
+    struct tm tm = *localtime(&t);
+
+
+    char D[3];
+    int current_day = tm.tm_mday;
+    sprintf(D, "%d", current_day);
+
+
+    char M[3];
+    int current_month=tm.tm_mon+1;
+    sprintf(M, "%d", current_month);
+
+
+    char Y[5];
+    int current_year=tm.tm_year+1900;
+    sprintf(Y, "%d", current_year);
+
+    strcpy(current_date,Y);
+
+
+    strcat(current_date,"-");
+
+    if(strlen(M)==1){
+        strcat(current_date,"0");
+        strcat(current_date,M);
+    }
+       else
+     strcat(current_date,M);
+    strcat(current_date,"-");
+
+    if(strlen(D)==1){
+        strcat(current_date,"0");
+        strcat(current_date,D);
+    }
+       else {
+
+   strcat(current_date,D);
+   }
+
+    current_hour= tm.tm_hour;
+    current_minutes = tm.tm_min;
+    char SH[3];
+    char EH[3];
+    char SM[3];
+    char EM[3];
+
+
+
+
+
+
+
+if(strcmp(current_date,record1[4])==0){
+            char startT[10],endT[10];
+            strcpy(startT,record1[2]);
+          SH[0]=startT[0];
+           SH[1]=startT[1];
+           SM[0]=startT[3];
+           SM[1]=startT[4];
+
+            strcpy(endT,record1[3]);
+          EH[0]=endT[0];
+           EH[1]=endT[1];
+           EM[0]=endT[3];
+           EM[1]=endT[4];
+           int c=atoi(SH) , d=atoi(EH), e=atoi(SM), f=atoi(EM);
+           if(current_hour>=c && d>=current_hour){
+            if((c!=d) || (current_minutes >=e && f>=current_minutes)){
+                    printf("Ready for attempt\t\t \n");
+                    goto ATTEMPT;
+
+
+
+
+
+
+            }
+            else{
+                printf("You cannot attempt this assignment now\n");
+                mysql_close(connection);
+                return 1;
+
+
+            }
+
+           }
+            else{
+            printf("You cannot attempt this assignment now\n");
+            mysql_close(connection);
+            return 1;
+            }
+
+        }
+        else{
+            printf("You cannot attempt this assignment now\n");
+            mysql_close(connection);
+            return 1;
+            }
+        mysql_close(connection);
+
+
+
+
 
 
 
