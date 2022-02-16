@@ -265,6 +265,33 @@ int attemptassignment(){
     {1,1,1,1,0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0,1,0,0,0,1,1,1,1}};
 
 
+//this is for displaying the assignment
+
+         strcpy(myquery, "SELECT * FROM assignment WHERE Assignment_Id = \'");
+         strcat(myquery, assignmentid);
+         strcat(myquery, "\'");
+
+         if(mysql_query(connection, myquery)){
+            printf("Unable to connect");
+            mysql_close(connection);
+            return 1;
+         }
+         r1 = mysql_store_result(connection);
+        if(r1==NULL){
+            printf("Unable to compile SQL statement\n");
+            mysql_close(connection);
+            return 1;
+        }
+        puts("Assignment_ID\t\tAssignment\t\tDate\t\tStartTime\t\tEndTime");
+        record1 = mysql_fetch_row(r1);
+
+            printf("%s\t\t %s\t\t %s\t\t %s\t\t %s\t\t\n",record1[0], record1[1], record1[4], record1[2], record1[3] );
+            strcpy(assignment,record1[1]);
+
+
+
+
+
 // this checks whether the assignment is with in time for attempt
 
 
