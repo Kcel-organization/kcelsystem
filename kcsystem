@@ -41,6 +41,267 @@
  int current_minutes;
 
 
+//this function is for checking assignments between dates
+    void checkDates(){
+    char sqlquery[255];
+    int assignmentID;
+         connection = mysql_init(0);
+         MYSQL_ROW record2;
+         if (!mysql_real_connect(connection, server, user, password, database, 0, NULL, 0)) {
+         fprintf(stderr, "%s\n", mysql_error(connection));
+         exit(1);
+         }
+
+         char str1[10];
+         char str2[10];
+         printf("From:\t");
+         scanf("%s", str1);
+         printf("To:\t");
+         scanf("%s", str2);
+         fflush(stdin);
+
+
+
+         strcpy(dates, "SELECT Assignment_ID FROM assignment WHERE Assignment_Date BETWEEN \'");
+         strcat(dates, str1);
+         strcat(dates, "\'AND\'");
+         strcat(dates, str2);
+         strcat(dates, "\'");
+
+         if(mysql_query(connection, dates)){
+            printf("Unable to connect");
+            mysql_close(connection);
+            return 1;
+         }
+         r2 = mysql_store_result(connection);
+        if(r2==NULL){
+            printf("Unable to compile SQL statement\n");
+            mysql_close(connection);
+            return 1;
+        }
+        while (record2 = mysql_fetch_row(r2)){
+            printf("%s\n",record2[0]);
+        }
+
+        mysql_close(connection);
+ }
+ 
+ 
+ 
+int attemptassignment(){
+         int Answer[28];
+    char assignment[5];
+
+    int pattern[26][28]={{0,1,1,0,1,0,0,1,1,0,0,1,1,1,1,1,1,0,0,1,1,0,0,1,1,0,0,1},
+    {1,1,1,0,1,0,0,1,1,0,0,1,1,1,1,0,1,0,0,1,1,0,0,1,1,1,1,0},
+    {0,0,1,1,0,1,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0,0,0,1,1},
+    {1,1,0,0,1,0,1,0,1,0,0,1,1,0,0,1,1,0,0,1,1,0,1,0,1,1,0,0},
+    {1,1,1,1,1,0,0,0,1,0,0,0,1,1,1,1,1,0,0,0,1,0,0,0,1,1,1,1},
+    {1,1,1,1,1,0,0,0,1,0,0,0,1,1,1,1,1,0,0,0,1,0,0,0,1,0,0,0},
+    {0,1,1,0,1,0,0,1,1,0,0,0,1,0,0,0,1,0,1,1,1,0,0,1,0,1,1,0},
+    {1,0,0,1,1,0,0,1,1,0,0,1,1,1,1,1,1,0,0,1,1,0,0,1,1,0,0,1},
+    {1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0},
+    {0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,1,0,0,1,1,0,0,1,0,1,1,0},
+    {1,0,0,1,1,0,1,0,1,1,0,0,1,0,0,0,1,1,0,0,1,0,1,0,1,0,0,1},
+    {1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,1,1,1},
+    {1,0,0,1,1,1,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1},
+    {1,0,0,1,1,1,0,1,1,0,1,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1},
+    {0,1,1,0,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,0,1,1,0},
+    {1,1,1,0,1,0,0,1,1,0,0,1,1,1,1,0,1,0,0,0,1,0,0,0,1,0,0,0},
+    {0,1,1,0,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,0,1,1,0,0,0,0,1},
+    {1,1,1,0,1,0,0,1,1,0,0,1,1,1,1,0,1,1,0,0,1,0,1,0,1,0,0,1},
+    {0,1,1,0,1,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,1,0,1,1,0},
+    {1,1,1,1,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0},
+    {1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,0,1,1,0},
+    {1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,0,1,0,0},
+    {1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,1,0,1,1,0,0,1},
+    {1,0,0,1,1,0,0,1,1,0,0,1,0,1,1,0,1,0,0,1,1,0,0,1,1,0,0,1},
+    {1,0,0,1,1,0,0,1,1,0,0,1,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0},
+    {1,1,1,1,0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0,1,0,0,0,1,1,1,1}};
+
+
+
+
+//this is for attempting the assignment
+
+
+    time_t start,stop;
+
+    int u;
+    int v;
+    int score=0;
+
+    ATTEMPT:
+    for(int d = 0;d<strlen(assignment);d++){
+            printf("Draw pattern for letter %c\n\n",assignment[d]);
+            int k=0;
+    start= time(NULL);
+    kcel:
+
+    for(int row=0; row<7; row++){
+        for(int col=0; col<4; col++){
+            printf("enter 1 or 0 at position [%d,%d]:\n",row, col );
+            scanf("%d", &Answer[k]);
+            if(Answer[k]!=1 && Answer[k]!=0){
+                printf("wrong input,repeat\n");
+                k=0;
+                goto kcel;
+            }
+            k++;
+        }
+    }
+    printf("\n");
+    //this displays what a student has attempted
+    printf("This is what you have done\n\n");
+    int p=0;
+    for(int row=0; row<7; row++){
+        for(int col=0; col<4; col++){
+            if(Answer[p]==1){
+                printf("*");
+                p++;
+            }
+            else if(Answer[p]==0){
+                printf(" ");
+                p++;
+            }
+        }
+        printf("\n");}
+     //this displays the right character
+        printf("The correct character is\n\n");
+        int r = 0;
+        int q= reference(assignment[d]);
+        for(int row=0; row<7; row++){
+        for(int col=0; col<4; col++){
+            if(pattern[q][r]==1)
+                printf("*");
+            else
+                printf(" ");
+            r++;
+        }
+        printf("\n");
+    }
+    printf("\n\n");
+
+    stop=time(NULL);
+     printf("Time taken is %.4f seconds\n", difftime(stop,start));
+     tot+= difftime(stop,start);
+    int charI= reference(assignment[d]);
+    int f=grade(pattern,Answer,charI);
+    score+=grade(pattern,Answer,charI);
+
+
+    printf("Your marks for letter %c is %d", assignment[d], f);
+
+    printf("\n\n");
+
+    }
+    v= strlen(assignment)*28;
+    percentage= (float)score/v * 100;
+
+
+    printf("Total Time taken is %d seconds\n", tot);
+    printf("score is %d\n",score);
+    printf("Your Total Percentage is %d",percentage );
+
+    insertscore();
+    }
+ }
+
+
+             menu:
+puts("\n\n\n\t\t\t\t\tMENU");
+puts("\t1:VIEWALL-Display assignment number and date, showing if attempted or not");
+puts("\t2:CHECKSTATUS-Displays the status report of the pupil summarising all assignments");
+puts("\t3:VIEWASSIGNMMENT assignmentid-To see the details of a specified assignment");
+puts("\t4:CHECKDATES dates from and to-Shows if there is an assignment within a specified date range");
+puts("\t5:REQUESTACTIVATION-Used for pupil to request activation from teacher");
+puts("\t6:ATTEMPTASSIGNMMENT assignmentid-To attempt a specified assignment\n\n");
+printf("Enter your choice:");
+scanf("%s",x );
+        int num;
+if(strcmp("VIEWALL",x)==0){
+
+    viewAll();
+    do{
+    printf("\nEnter 1 to go to Menu\n");
+    scanf("%d",&num);
+
+    system("cls");
+    goto menu;}
+    while(num == 1);
+
+}
+  else if(strcmp("ATTEMPTASSIGNMENT",x)==0){
+    attemptassignment();
+
+
+    do{
+    printf("\nEnter 1 to go to Menu\n");
+    scanf("%d",&num);
+
+    system("cls");
+    goto menu;}
+    while(num == 1);
+
+}
+   else if(strcmp("CHECKSTATUS",x)==0){
+        checkstatus();
+        do{
+    printf("\nEnter 1 to go to Menu\n");
+    scanf("%d",&num);
+
+    system("cls");
+    goto menu;}
+    while(num == 1);
+
+
+}
+   else if(strcmp("VIEWASSIGNMENT",x)==0){
+    viewAssignment();
+    do{
+    printf("\nEnter 1 to go to Menu\n");
+    scanf("%d",&num);
+
+    system("cls");
+    goto menu;}
+    while(num == 1);
+
+}
+     else if(strcmp("REQUESTACTIVATION",x)==0){
+    requestActivation();
+    do{
+    printf("\nEnter 1 to go to Menu\n");
+    scanf("%d",&num);
+
+    system("cls");
+    goto menu;}
+    while(num == 1);
+
+}
+   else if(strcmp("CHECKDATES",x)==0){
+   checkDates();
+   do{
+    printf("\nEnter 1 to go to Menu\n");
+    scanf("%d",&num);
+
+    system("cls");
+    goto menu;}
+    while(num == 1);
+
+}
+
+   else {
+    do{
+    printf("\nEnter 1 to go to Menu\n");
+    scanf("%d",&num);
+
+    system("cls");
+    goto menu;}
+    while(num == 1);
+
+
+   }
+}
 
 
 
