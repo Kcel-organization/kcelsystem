@@ -265,6 +265,31 @@ int attemptassignment(){
     {1,1,1,1,0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0,1,0,0,0,1,1,1,1}};
 
 
+
+//this checks whether an assignment has been attempted
+
+    strcpy(checkattempt,"SELECT Pupil_ID FROM score WHERE Assignment_ID = \'");
+    strcat(checkattempt,assignmentid);
+    strcat(checkattempt,"\'AND Pupil_ID=\'");
+    strcat(checkattempt,pupil_id);
+    strcat(checkattempt,"\'");
+    mysql_query(connection,checkattempt);
+    r4=mysql_store_result(connection);
+    check=mysql_num_rows(r4);
+
+
+
+    if(check > 0){
+        puts("You already attempted this assignment");
+
+}
+ else
+    {
+    puts(".....attempt this assignment....");
+
+
+
+
 //this is for displaying the assignment
 
          strcpy(myquery, "SELECT * FROM assignment WHERE Assignment_Id = \'");
