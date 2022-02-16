@@ -613,6 +613,55 @@ if(strcmp(current_date,record1[4])==0){
 
     }
 
+void viewcomment(){
+
+    connection = mysql_init(NULL);
+
+
+    if (!mysql_real_connect(connection, server, user, password, database, 0, NULL, 0)) {
+         fprintf(stderr, "%s\n", mysql_error(connection));
+         exit(1);
+         }
+          strcpy(myquery, "SELECT Assignment_ID,Score,Comment FROM score WHERE Pupil_ID = \'");
+         strcat(myquery,pupil_id);
+         strcat(myquery, "\'");
+
+         if(mysql_query(connection, myquery)){
+            printf("Unable to connect");
+            mysql_close(connection);
+            return 1;
+
+         }
+
+         r2 = mysql_store_result(connection);
+         record2 = mysql_fetch_row(r2);
+         if(record2==NULL){
+            printf("No attempted assignments found\n");
+            mysql_close(connection);
+            return 1;
+
+
+
+        }
+//
+//         r2 = mysql_store_result(connection);
+         puts("Assignment_ID\t\tScore\t\tComment");
+         while(record2 = mysql_fetch_row(r2)){
+
+         printf("%s", record2[0]);
+         printf("\t\t\t%s", record2[1]);
+         printf("\t\t%s", record2[2]);
+         printf("\n\n");}
+
+         return 0;
+
+         mysql_close(connection);
+ }
+
+
+
+
+
 
 int main(){
     char x[20];
