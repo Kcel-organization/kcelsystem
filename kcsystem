@@ -554,6 +554,64 @@ if(strcmp(current_date,record1[4])==0){
     insertscore();
     }
  }
+ 
+  //this function inserts the average percentage into the database
+    void insertscore(){
+        //char id[20];
+        char percent[20];
+        char tt[10];
+        //itoa(assignment,id,20);
+        itoa(percentage,percent,10);
+        itoa(tot,tt,10);
+         connection = mysql_init(NULL);
+
+         if (!mysql_real_connect(connection, server, user, password, database, 0, NULL, 0)) {
+         fprintf(stderr, "%s\n", mysql_error(connection));
+         exit(1);
+         }
+         strcpy(myquery1,"SELECT Teacher_ID FROM assignment WHERE Assignment_ID =\'");
+         strcat(myquery1, assignmentid);
+         strcat(myquery1,"\'");
+         if(mysql_query(connection, myquery1)){
+            printf("Unable to connect");
+            mysql_close(connection);
+            return 1;
+
+         }
+         r2 = mysql_store_result(connection);
+         record2 = mysql_fetch_row(r2);
+
+         char teacherid[20];
+         strcpy(teacherid,record2[0]);
+
+
+         strcpy(request,"INSERT INTO score (Pupil_ID,Assignment_ID,Score,Duration,Teacher_ID)values( \'");
+         strcat(request,pupil_id);
+         strcat(request,"\',");
+         strcat(request,"\'");
+         strcat(request,assignmentid);
+         strcat(request,"\',");
+         strcat(request,"\'");
+         strcat(request,percent);
+         strcat(request,"\',");
+         strcat(request,"\'");
+         strcat(request,tt);
+         strcat(request,"\',");
+         strcat(request,"\'");
+         strcat(request,teacherid);
+         strcat(request,"\')");
+
+
+
+         if(mysql_query(connection,request)){
+            printf("Unable to insert data");
+            mysql_close(connection);
+
+         }
+         mysql_close(connection);
+
+
+    }
 
 
              menu:
