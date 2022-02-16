@@ -614,6 +614,51 @@ if(strcmp(current_date,record1[4])==0){
     }
 
 
+int main(){
+    char x[20];
+     //this prompts pupil to enter user code to login
+
+
+         connection = mysql_init(0);
+         MYSQL_ROW record0;
+
+         if (!mysql_real_connect(connection, server, user, password, database, 0, NULL, 0)) {
+         fprintf(stderr, "%s\n", mysql_error(connection));
+         exit(1);
+         }
+
+        wrong_pupil_id:
+        printf("Enter pupil_id to login:\t");
+        scanf("%s",pupil_id);
+
+         if(mysql_query(connection, "SELECT Pupil_ID FROM pupil")){
+            printf("Unable to connect");
+
+            mysql_close(connection);
+            return 1;
+         }
+         r = mysql_store_result(connection);
+        if(r==NULL){
+            printf("Unable to compile SQL statement\n");
+            mysql_close(connection);
+            return 1;
+        }
+
+        while (record0 = mysql_fetch_row(r)){
+                if(strcmp(record0[0],pupil_id)==0){
+         printf("\nUser %s, You have logged in.\n",record0[0]);
+         viewcomment();
+
+         goto menu;
+              }
+}
+
+ puts("wrong pupil_id");
+ goto wrong_pupil_id;
+
+
+
+
              menu:
 puts("\n\n\n\t\t\t\t\tMENU");
 puts("\t1:VIEWALL-Display assignment number and date, showing if attempted or not");
