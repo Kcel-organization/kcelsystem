@@ -265,6 +265,46 @@ int attemptassignment(){
     {1,1,1,1,0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0,1,0,0,0,1,1,1,1}};
 
 
+connection = mysql_init(NULL);
+
+        if (!mysql_real_connect(connection, server, user, password, database, 0, NULL, 0)) {
+         fprintf(stderr, "%s\n", mysql_error(connection));
+        exit(1);
+        }
+
+         scanf("%s", assignmentid);
+         fflush(stdin);
+
+
+         // this is for the deactivated student
+
+         strcpy(myquery, "SELECT * FROM pupil WHERE Pupil_ID = \'");
+         strcat(myquery,pupil_id);
+         strcat(myquery, "\'");
+
+         if(mysql_query(connection, myquery)){
+            printf("Unable to connect");
+            mysql_close(connection);
+            return 1;
+         }
+         r2 = mysql_store_result(connection);
+        if(r2==NULL){
+            printf("Unable to compile SQL statement\n");
+            mysql_close(connection);
+            return 1;
+        }
+        char status[20];
+         record1 = mysql_fetch_row(r2);
+         strcpy(status, record1[4]);
+         if(strcmp("deactivated",status)==0){
+                printf(".......Request for activation from teacher......");
+                            return 1;
+
+                }
+
+
+
+
 
 //this checks whether an assignment has been attempted
 
