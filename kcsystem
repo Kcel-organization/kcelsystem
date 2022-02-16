@@ -39,6 +39,57 @@
  char current_date[11];
  int current_hour;
  int current_minutes;
+ 
+ //this function inserts a request into the database
+ void requestActivation(){
+     char pupil_id[10];
+     printf("Enter your pupil_id:\t");
+     scanf("%s",pupil_id);
+     fflush(stdin);
+
+     connection = mysql_init(NULL);
+         MYSQL_ROW record1;
+         if (!mysql_real_connect(connection, server, user, password, database, 0, NULL, 0)) {
+         fprintf(stderr, "%s\n", mysql_error(connection));
+         exit(1);
+         }
+
+         strcpy(myquery, "SELECT * FROM pupil WHERE Pupil_ID = \'");
+         strcat(myquery,pupil_id );
+         strcat(myquery, "\'");
+
+         if(mysql_query(connection, myquery)){
+            printf("Unable to connect");
+            mysql_close(connection);
+            return 1;
+         }
+         r1 = mysql_store_result(connection);
+        if(r1==NULL){
+            printf("Unable to compile SQL statement\n");
+            mysql_close(connection);
+            return 1;
+        }
+        char status[20];
+         record1 = mysql_fetch_row(r1);
+         strcpy(status, record1[4]);
+         if(strcmp("active",status)==0){
+                printf("..........you are active.........");
+                            return 1;
+
+                }
+
+
+         strcpy(request,"INSERT INTO activation_request (Pupil_ID)values( \'");
+         strcat(request,pupil_id);
+         strcat(request,"\')");
+         if(mysql_query(connection,request)){
+            printf("Unable to insert data");
+            mysql_close(connection);
+         }
+         mysql_close(connection);
+         printf("Request sent");
+ }
+
 
 
 //this function is for checking assignments between dates
