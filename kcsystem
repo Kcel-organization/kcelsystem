@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <windows.h>
+#include <winsock.h>
+#include <mysql.h>
+# include<conio.h>
+#include<time.h>
+#include<string.h>
+ MYSQL *connection;
+ MYSQL_RES *result;
+ MYSQL_RES *resultset;
+ MYSQL_RES *r;
+ MYSQL_ROW row;
+ MYSQL_RES *result1;
+ MYSQL_RES *resultset1;
+ MYSQL_RES *r1;
+ MYSQL_RES *r2;
+ MYSQL_RES *r3;
+ MYSQL_RES *r4;
+ MYSQL_RES *r5;
+ MYSQL_ROW row1;
+ char *server = "127.0.0.1";
+ char *user = "root";
+ char *password = "";
+ char *database = "kcelsystem";
+ char myquery[255];
+ char myquery1[255];
+ char request[255];
+
+ MYSQL_ROW record1;
+ MYSQL_ROW record2;
+ char dates[255];
+ char pupil_id[4];
+ char assignmentid[20];
+ int percentage;
+ int tot=0;
+ char checkattempt[255];
+ MYSQL_ROW check;
+ char current_date[11];
+ int current_hour;
+ int current_minutes;
+
+
+
+
+
+
+
+
